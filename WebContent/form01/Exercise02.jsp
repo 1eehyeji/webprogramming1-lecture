@@ -34,7 +34,6 @@
 					<option value="three" <%="three".equals(request.getParameter("cmd")) ? "selected" : "" %>>three</option>
 				</select>
 			</div>
-			
 			<div class="form-group">
 				<div class="radio">
 					<label><input type="radio" name="radio1" value="one" <%="one".equals(request.getParameter("cmd")) ? "checked" : "" %> />one</label>
