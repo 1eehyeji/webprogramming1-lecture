@@ -1,3 +1,4 @@
+<%@page import="jsp01.Student"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -17,37 +18,35 @@
 <%
 	request.setCharacterEncoding("UTF-8");
 
-	String id = "";
+	int id = -1;
 	String studentNum = "";
 	String name = "";
-	String department = "";
-	String grade = "";
+	int department = -1;
+	int grade = -1;
 	String error = null;
 
 	if (request.getMethod().equals("POST")) {
 		
-		id = request.getParameter("id");
+		id = Integer.parseInt(request.getParameter("id").length() == 0 ? "-1" : request.getParameter("id"));
 		studentNum = request.getParameter("studentNum");
 		name = request.getParameter("name");
-		department = request.getParameter("department");
-		grade = request.getParameter("grade");
+		department = Integer.parseInt(request.getParameter("department").length() == 0 ? "-1" : request.getParameter("department"));
+		grade = Integer.parseInt(request.getParameter("grade").length() == 0 ? "-1" : request.getParameter("grade"));
+		
+		Student std = new Student(id, studentNum, name, department, grade);
 
-		if (id == null || id.length() == 0) {
+		if (id == -1) {
 			error = "아이디를 입력하세요";
 		} else if (studentNum == null || studentNum.length() == 0) {
 			error = "학번을 입력하세요";
 		} else if (name == null || name.length() == 0) {
 			error = "이름을 입력하세요";
-		} else if (department == null || department.length() == 0) {
+		} else if (department == -1) {
 			error = "학과를 선택하세요";
-		} else if (grade == null || grade.length() == 0) {
+		} else if (grade == -1) {
 			error = "학년을 입력하세요";
 		}else{
-			session.setAttribute("id", id);
-			session.setAttribute("studentNum", studentNum);
-			session.setAttribute("name", name);
-			session.setAttribute("department", department);
-			session.setAttribute("grade", grade);
+			session.setAttribute("std", std);
 			response.sendRedirect("student_success.jsp");
 			return;
 		}
@@ -60,7 +59,7 @@
 <form method="post">
 	<div class="form_group">
 	<label>ID</label>
-	<input type="text" class="form-control" name="id" value="<%= id == null? "" : id%>">
+	<input type="text" class="form-control" name="id" value="<%= id == -1? "" : id%>">
 	</div>
 	
 	<div class="form_group">
@@ -76,16 +75,16 @@
 	<div class="form_group">
 	<label>학과</label>
 	<select class="form-control" name="department">
-		<option value="소프트웨어공학과" <%=department.equals("소프트웨어공학과") ? "selected" : "" %>>소프트웨어공학과</option>
-		<option value="컴퓨터공학과" <%=department.equals("컴퓨터공학과") ? "selected" : "" %>>컴퓨터공학과</option>
-		<option value="정보통신학과" <%=department.equals("정보통신학과") ? "selected" : "" %>>정보통신학과</option>
-		<option value="글로컬IT공학과" <%=department.equals("글로컬IT공학과") ? "selected" : "" %>>글로컬IT공학과</option>
+		<option value="1" <%=department == 1 ? "selected" : "" %>>소프트웨어공학과</option>
+		<option value="2" <%=department == 2 ? "selected" : "" %>>컴퓨터공학과</option>
+		<option value="3" <%=department == 3 ? "selected" : "" %>>정보통신학과</option>
+		<option value="4" <%=department == 4 ? "selected" : "" %>>글로컬IT공학과</option>
 	</select>
 	</div>
 	
 	<div class="form_group">
 	<label>학년</label>
-	<input type="text" class="form-control" name="grade" value="<%= grade == null? "" : grade%>">
+	<input type="text" class="form-control" name="grade" value="<%= grade == -1 ? "" : grade%>">
 	</div>
 	
 	<br>

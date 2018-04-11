@@ -1,3 +1,4 @@
+<%@page import="jsp01.Student"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -16,6 +17,7 @@
 </head>
 <%
 	request.setCharacterEncoding("UTF-8");
+	Student std = (Student)session.getAttribute("std");
 %>
 <body>
 <div class="container">
@@ -25,23 +27,30 @@
 		<table class="table table-bordered">
 			<tr>
 			<td>ID</td>
-			<td><%= (String)session.getAttribute("id") %></td>
+			<td><%= std.getId() %></td>
 			</tr>
 			<tr>
 			<td>학번</td>
-			<td><%= (String)session.getAttribute("studentNum") %></td>
+			<td><%= std.getStudentNumber() %></td>
 			</tr>
 			<tr>
 			<td>이름</td>
-			<td><%= (String)session.getAttribute("name") %></td>
+			<td><%= std.getName() %></td>
 			</tr>
 			<tr>
 			<td>학과ID</td>
-			<td><%= (String)session.getAttribute("department") %></td>
+			<td>
+				<% 
+					if(std.getDepartmentId() == 1) out.print("소프트웨어공학과");
+					else if(std.getDepartmentId() == 2) out.print("컴퓨터공학과");
+					else if(std.getDepartmentId() == 3) out.print("정보통신학과");
+					else if(std.getDepartmentId() == 4) out.print("글로컬IT공학과");
+				%>
+			</td>
 			</tr>
 			<tr>
 			<td>학년</td>
-			<td><%= (String)session.getAttribute("grade") %></td>
+			<td><%= std.getYear() %></td>
 			</tr>
 		</table>
 	</div>
