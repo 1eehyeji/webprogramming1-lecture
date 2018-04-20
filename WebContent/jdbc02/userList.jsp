@@ -4,7 +4,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<% List<User> list = UserDao.findAll(); %>
+<%  
+	int pageSize = 10;
+	int currentPage = 1;
+	int recordCount = UserDao.count();
+	
+	if(request.getParameter("pg") != null) 
+		currentPage = Integer.parseInt(request.getParameter("pg"));
+	
+	List<User> list = UserDao.findAll(currentPage, pageSize);
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -47,6 +56,12 @@
 			<%} %>
 	</tbody>
 </table>
+<% if(currentPage > 1){ %>
+	<a class="btn btn-default" href="userList.jsp?pg=<%= currentPage - 1 %>" >이전</a>
+<%} %>
+<% if(currentPage < ((recordCount+(pageSize - 1))/pageSize)){ %>
+	<a class="btn btn-default" href="userList.jsp?pg=<%= currentPage + 1 %>" >다음</a>
+<%} %>
 </div>
 </body>
 </html>
