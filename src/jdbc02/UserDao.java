@@ -9,7 +9,7 @@ import java.util.List;
 public class UserDao {
 
 	public static List<User> findAll(int currentPage, int pageSize) throws Exception{
-		String sql = "select s.*, d.departmentName " +
+		String sql = "SELECT s.*, d.departmentName " +
 				"from user s left join department d on s.departmentId = d.id " +
 				"limit ?,?";
 		try(Connection connection = DB.getConnection("student1");
