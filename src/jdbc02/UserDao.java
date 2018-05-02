@@ -14,12 +14,13 @@ public class UserDao {
 				"limit ?,?";
 		try(Connection connection = DB.getConnection("student1");
 				PreparedStatement statment = connection.prepareStatement(sql)){
-				statment.setInt(1, ((currentPage - 1) * pageSize));
-				statment.setInt(2, pageSize);
+			statment.setInt(1, ((currentPage - 1) * pageSize));
+			statment.setInt(2, pageSize);
 			try(ResultSet resultSet = statment.executeQuery()){
 				ArrayList<User> list = new ArrayList<User>();
 				while(resultSet.next()) {
 					User user = new User();
+					user.setId(resultSet.getInt("id"));
 					user.setUserid(resultSet.getString("userid"));
 					user.setName(resultSet.getString("name"));
 					user.setEmail(resultSet.getString("email"));
@@ -44,6 +45,7 @@ public class UserDao {
 				ArrayList<User> list = new ArrayList<User>();
 				while(resultSet.next()) {
 					User user = new User();
+					user.setId(resultSet.getInt("id"));
 					user.setUserid(resultSet.getString("userid"));
 					user.setName(resultSet.getString("name"));
 					user.setEmail(resultSet.getString("email"));
@@ -54,6 +56,47 @@ public class UserDao {
 				}
 				return list;
 			}
+		}
+	}
+
+	public static User findOne(String id) throws Exception{
+		String sql = "select s.*, d.departmentName " +
+				"from user s left join department d on s.departmentId = d.id " +
+				"where s.id = ?";
+		try(Connection connection = DB.getConnection("student1");
+				PreparedStatement statment = connection.prepareStatement(sql)){
+			statment.setString(1, id);
+			try(ResultSet resultSet = statment.executeQuery()){
+				if (resultSet.next()) {
+					User user = new User();
+					user.setId(resultSet.getInt("id"));
+					user.setUserid(resultSet.getString("userid"));
+					user.setName(resultSet.getString("name"));
+					user.setEmail(resultSet.getString("email"));
+					user.setDepartmentId(resultSet.getInt("departmentId"));
+					user.setEnabled(resultSet.getInt("enabled") == 1 ? true : false);
+					user.setUserType(resultSet.getString("userType"));user.setId(resultSet.getInt("id"));
+					return user;
+				}
+			}
+			return null;
+		}
+	}
+
+
+	public static void update(User user) throws Exception {
+		String sql = "UPDATE user SET userid=?, name=?, email=?, departmentId=?, enabled=?, userType=? " +
+				" WHERE id = ?";
+		try (Connection connection = DB.getConnection("student1");
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, user.getUserid());
+			statement.setString(2, user.getName());
+			statement.setString(3, user.getEmail());
+			statement.setInt(4, user.getDepartmentId());
+			statement.setInt(5, user.isEnabled()? 1 : 0);
+			statement.setString(6, user.getUserType());
+			statement.setInt(7, user.getId());
+			statement.executeUpdate();
 		}
 	}
 
