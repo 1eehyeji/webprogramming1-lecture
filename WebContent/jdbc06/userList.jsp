@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="jdbc02.UserDao"%>
 <%@page import="java.util.List"%>
 <%@page import="jdbc02.User"%>
@@ -6,6 +7,8 @@
     pageEncoding="UTF-8"%>
 
 <%  
+	request.setCharacterEncoding("UTF-8");
+	
 	int pageSize = 10;
 	int currentPage = 1;
 	int recordCount = UserDao.count();
@@ -14,7 +17,13 @@
 		currentPage = Integer.parseInt(pg);
 	int lastPage = (recordCount + pageSize - 1) / pageSize;
 	if(currentPage > lastPage) currentPage = lastPage;
-	List<User> list = UserDao.findAll(currentPage, pageSize);
+	
+	String srchText = request.getParameter("srchText");
+	if (srchText == null) srchText = "";
+	String srchTextEncoded = URLEncoder.encode(srchText, "UTF-8");
+	
+	List<User> list = UserDao.findByName(srchText ,currentPage, pageSize);
+
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -39,10 +48,18 @@
 <div class="container">
 <h1>사용자 목록</h1>
 
-<a id="createButton" class="btn btn-primary"href="userCreate.jsp">
+<a id="createButton" class="btn btn-primary pull-right" href="userCreate.jsp?pg=<%= currentPage%>&srchText=<%=srchTextEncoded%>">
 <i class="glyphicon glyphicon-plus"></i>사용자 등록
 </a>
 
+<form class="form-inline">
+	<div class="form-group">
+		<label>이름</label>
+		<input type="text"class="form-control"name="srchText"value="<%= srchText %>"
+			placeholder="검색조건"/>
+		<button type="submit"class="btn btn-primary">조회</button>
+	</div>
+</form>
 
 <table class="table table-bordered table-condensed">
 	<thead>
@@ -57,7 +74,7 @@
 	</thead>
 	<tbody>
 		<% for(User user : list){ %>
-			<tr data-url="userEdit.jsp?id=<%= user.getId()%>&pg=<%= currentPage%>">
+			<tr data-url="userEdit.jsp?id=<%= user.getId()%>&pg=<%= currentPage%>&srchText=<%=srchTextEncoded%>">
 				<td><%=user.getUserid() %></td>
 				<td><%=user.getName() %></td>
 				<td><%=user.getEmail() %></td>

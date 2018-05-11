@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="jdbc02.*, java.util.*"%>
@@ -8,6 +9,10 @@
 	String id = request.getParameter("id");
 	User user = null;
 	String pg = request.getParameter("pg");
+
+	String srchText = request.getParameter("srchText");
+	if (srchText == null) srchText = "";
+	String srchTextEncoded = URLEncoder.encode(srchText, "UTF-8");
 
 	if (request.getMethod().equals("GET")) {
 		user = UserDao.findOne(id);
@@ -37,7 +42,7 @@
 			에러메시지 = "사용자 유형을 입력하세요";
 		else {
 			UserDao.update(user);
-        	response.sendRedirect("userList.jsp?pg=" + pg);
+        	response.sendRedirect("userList.jsp?pg=" + pg + "&srchText=" + srchTextEncoded);
 			return;
 		}
     }
@@ -113,10 +118,15 @@ input.form-control, select.form-control {
 			<button type="submit" class="btn btn-primary">
 				<i class="glyphicon glyphicon-ok"></i>저장
 			</button>
-			<a href="userDelete.jsp?id=<%= id %>&pg=<%= pg %>"class="btn btn-default"
+			<a href="userDelete.jsp?id=<%= id %>&pg=<%= pg %>&srchText=<%= srchTextEncoded %>"
+				class="btn btn-default"
 				onclick="return confirm('삭제하시겠습니까?')">
 				<i class="glyphicon glyphicon-trash"></i>삭제
-			</a>	
+			</a>
+			<a href="userList.jsp?pg=<%= pg %>&srchText=<%= srchTextEncoded %>"
+				class="btn btn-default">
+			<i class="glyphicon glyphicon-list"></i>목록으로
+			</a>
 		</form>
 		<hr />
 <%

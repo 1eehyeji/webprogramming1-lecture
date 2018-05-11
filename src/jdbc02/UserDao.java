@@ -75,7 +75,7 @@ public class UserDao {
 					user.setEmail(resultSet.getString("email"));
 					user.setDepartmentId(resultSet.getInt("departmentId"));
 					user.setEnabled(resultSet.getInt("enabled") == 1 ? true : false);
-					user.setUserType(resultSet.getString("userType"));user.setId(resultSet.getInt("id"));
+					user.setUserType(resultSet.getString("userType"));
 					return user;
 				}
 			}
@@ -126,6 +126,34 @@ public class UserDao {
     }
 	 */
 
+	public static List<User> findByName(String name, int currentPage, int pageSize) throws Exception {
+		String sql = "select s.*, d.departmentName " +
+				"from user s left join department d on s.departmentId = d.id " + 
+				"where name LIKE ?" +
+				"LIMIT ?, ?";
+		try (Connection connection = DB.getConnection("student1");
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, name + "%");
+			statement.setInt(2, (currentPage - 1) * pageSize);
+			statement.setInt(3, pageSize);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				ArrayList<User> list = new ArrayList<User>();
+				while (resultSet.next()) {
+					User user = new User();
+					user.setId(resultSet.getInt("id"));
+					user.setUserid(resultSet.getString("userid"));
+					user.setName(resultSet.getString("name"));
+					user.setEmail(resultSet.getString("email"));
+					user.setDepartmentName(resultSet.getString("departmentName"));
+					user.setEnabled(resultSet.getInt("enabled") == 1 ? true : false);
+					user.setUserType(resultSet.getString("userType"));
+					list.add(user);
+				}
+				return list;
+			}
+		}
+	}
+
 	public static List<User> findByUserType(String[] userType) throws Exception {
 		String sql = "select s.*, d.departmentName " +
 				"from user s left join department d on s.departmentId = d.id ";
@@ -170,6 +198,43 @@ public class UserDao {
 				++recordCount;
 			}
 			return recordCount;
+		}
+	}
+
+	public static int count(String name) throws Exception{
+		String sql = "SELECT COUNT(*) FROM user WHERE name LIKE ?";
+		try (Connection connection = DB.getConnection("student1");
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, name + "%");
+			try (ResultSet resultSet = statement.executeQuery()) {
+				if (resultSet.next())
+					return resultSet.getInt(1);
+			}
+		}
+		return 0;
+	}
+
+	public static void insert(User user) throws Exception {
+		String sql = "INSERT user (userid, password, name, email, departmentId, enabled, userType)" +
+				" VALUES (?, ?, ?, ?, ?, 1, ?)";
+		try (Connection connection = DB.getConnection("student1");
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, user.getUserid());
+			statement.setString(2, user.getPassword());
+			statement.setString(3, user.getName());
+			statement.setString(4, user.getEmail());
+			statement.setInt(5, user.getDepartmentId());
+			statement.setString(6, user.getUserType());
+			statement.executeUpdate();
+		}
+	}
+
+	public static void delete(int id) throws Exception {
+		String sql = "DELETE FROM user WHERE id = ?";
+		try (Connection connection = DB.getConnection("student1");
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, id);
+			statement.executeUpdate();
 		}
 	}
 
