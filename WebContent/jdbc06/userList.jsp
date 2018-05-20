@@ -49,7 +49,7 @@
 <h1>사용자 목록</h1>
 
 <a id="createButton" class="btn btn-primary pull-right" href="userCreate.jsp?pg=<%= currentPage%>&srchText=<%=srchTextEncoded%>">
-<i class="glyphicon glyphicon-plus"></i>사용자 등록
+	<i class="glyphicon glyphicon-plus"></i>사용자 등록
 </a>
 
 <form class="form-inline">
@@ -57,9 +57,9 @@
 		<label>이름</label>
 		<input type="text"class="form-control"name="srchText"value="<%= srchText %>"
 			placeholder="검색조건"/>
-		<button type="submit"class="btn btn-primary">조회</button>
 	</div>
-</form>
+	<button type="submit"class="btn btn-primary">조회</button>
+</form> 
 
 <table class="table table-bordered table-condensed">
 	<thead>
