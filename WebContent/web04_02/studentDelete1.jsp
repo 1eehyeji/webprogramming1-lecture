@@ -1,3 +1,4 @@
+<%@page import="web04_02.ParseUtils"%>
 <%@page import="web04_02.StudentDAO"%>
 <%@page import="java.net.URLEncoder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
