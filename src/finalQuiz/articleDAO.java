@@ -32,7 +32,7 @@ public class articleDAO {
 			statement.setInt(1, (currentPage - 1) * pageSize); // firstRecordIndex
 			statement.setInt(2, pageSize);                     // pageSize
 			try (ResultSet rs = statement.executeQuery()) {
-				ArrayList<articleDTO>list = new ArrayList<articleDTO>();
+				ArrayList<articleDTO> list = new ArrayList<articleDTO>();
 				while (rs.next()) {
 					articleDTO article = new articleDTO();
 					article.setId(rs.getInt("id"));

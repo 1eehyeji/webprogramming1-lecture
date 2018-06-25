@@ -1,0 +1,26 @@
+CREATE DEFINER=`user1`@`%` PROCEDURE `book_findAll`(
+
+in firstRecordIndex int,
+
+in pageSize int
+)
+
+BEGIN
+
+
+
+select b.*, c.categoryName
+
+from book b
+
+left join category c on b.categoryId = c.id
+
+left join publisher p on b.publisherId = p.id
+
+order by b.id
+
+limit firstRecordIndex, pageSize;
+
+
+
+END
